@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 环境变量与凭证（严禁提交）
+.env
+.env.*
+*.token
+*.key
+.fuyao_key
+mcd-token*
+tokens.json
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 本地临时产物
+.probe/
+.skilltest*/
+*.log
