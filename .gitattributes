@@ -1,0 +1,7 @@
+# 官方参赛声明：保持与官方仓库字节一致，禁止任何换行符转换
+CONTEST_DECLARATION.md -text
+
+# 其余文本文件统一使用 LF
+* text=auto eol=lf
+*.png binary
+*.jpg binary
