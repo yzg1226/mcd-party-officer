@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>派对拼团官 · 在线演示（真实跑通快照）</title>
+<meta name="description" content="麦当劳门店派对成团调度 Skill 在线演示：成团概率雷达 / 包场vs拼团 / 招募卡 / 邀请函。2026-10-09 真实 Token 跑通快照。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#DA291C; --orange:#F24E1E; --yellow:#FFC72C;
+  --bg:#faf7f2; --card:#fff; --ink:#2b2b2b; --ink2:#6b6b6b; --ink3:#8a8a8a;
+  --line:#ece7df; --chip:#FFF3D1; --chipInk:#8a6100;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+     background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px 64px}
+
+/* header */
+header{background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;padding:26px 0 22px;margin-bottom:20px}
+.hd{max-width:960px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.hd h1{font-size:25px;letter-spacing:.5px;font-weight:800}
+.hd .sub{font-size:13.5px;opacity:.93;margin-top:4px}
+.btn-star{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);
+  color:#fff;text-decoration:none;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:700;white-space:nowrap}
+.btn-star:hover{background:rgba(255,255,255,.28)}
+
+/* notice */
+.notice{background:#fff8e6;border:1px solid #f0dfae;color:#7a5b00;border-radius:14px;padding:12px 16px;font-size:13.5px;margin-bottom:22px}
+.notice b{color:#5c4400}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:18px;
+      box-shadow:0 2px 10px rgba(120,90,60,.04)}
+.card h2{font-size:17px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;
+  background:var(--red);color:#fff;font-size:12px;font-weight:800}
+.card .desc{color:var(--ink3);font-size:13px;margin-bottom:14px}
+
+/* 对话 */
+.qbox{background:#f6f8fa;border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14.5px;color:#333;margin-bottom:16px}
+.qbox .who{font-size:12px;color:var(--ink3);margin-bottom:4px}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.seg button{border:1px solid var(--line);background:#fff;color:var(--ink2);padding:8px 15px;border-radius:999px;
+  font-size:14px;cursor:pointer;font-family:inherit;transition:.15s}
+.seg button:hover{border-color:var(--red);color:var(--red)}
+.seg button.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+
+/* 概率 */
+.prob{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.probnum{font-size:34px;font-weight:900;line-height:1;letter-spacing:-1px}
+.probnum small{font-size:16px;font-weight:800}
+.probmeta{font-size:13px;color:var(--ink3);margin-top:6px}
+.lvl{display:inline-block;background:var(--chip);color:var(--chipInk);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;margin-top:8px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{background:#f6f8fa;border:1px solid var(--line);border-radius:10px;padding:6px 11px;font-size:12.5px;color:var(--ink2)}
+.pitch{background:#fff8e6;border:1px dashed #ecd9a8;border-radius:12px;padding:11px 14px;font-size:13.5px;color:#6b5100;margin-top:12px}
+
+/* 双卡对比 */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+.mode{border:1px solid var(--line);border-radius:14px;padding:16px}
+.mode.best{border-color:var(--red);background:#fffaf7;box-shadow:0 0 0 2px rgba(218,41,28,.07)}
+.mode .t{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.tag{background:var(--red);color:#fff;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:700}
+.mode .price{font-size:26px;font-weight:900;letter-spacing:-.5px}
+.mode .cert{font-size:12.5px;color:var(--ink3);margin-top:6px}
+.verdict{margin-top:14px;background:#f6f8fa;border-radius:12px;padding:12px 14px;font-size:13.5px}
+.verdict b{color:var(--red)}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left}
+th{color:var(--ink3);font-weight:600;font-size:12.5px}
+td b{font-weight:800}
+
+/* 招募卡 */
+pre.cardtxt{background:#2b2b2b;color:#f0f0f0;border-radius:14px;padding:16px 18px;overflow:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.85;white-space:pre}
+.copy{margin-top:10px;border:1px solid var(--line);background:#fff;color:var(--ink2);padding:8px 15px;border-radius:10px;
+  font-size:13.5px;cursor:pointer;font-family:inherit}
+.copy:hover{border-color:var(--red);color:var(--red)}
+
+/* 邀请函 */
+.inviteFrame{width:100%;height:660px;border:1px solid var(--line);border-radius:16px;background:#faf7f2}
+@media(max-width:640px){.inviteFrame{height:720px}}
+
+/* 时间线 */
+.tl{list-style:none;font-size:14px}
+.tl li{padding:9px 0 9px 22px;border-left:2px solid var(--line);position:relative;margin-left:6px}
+.tl li:before{content:"";position:absolute;left:-6px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--yellow);border:2px solid #fff}
+.tl li b{color:var(--red)}
+
+footer{text-align:center;color:var(--ink3);font-size:13px;padding-top:8px}
+footer a{color:var(--red);text-decoration:none;font-weight:700}
+.src{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:14px 16px;font-size:12.5px;color:var(--ink3);margin-bottom:18px}
+.src b{color:var(--ink2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd">
+    <div>
+      <h1>🍟 派对拼团官 · 在线演示</h1>
+      <div class="sub">麦当劳门店派对成团调度 Skill ｜ 一句话问出去，回来一张「这场办得成吗」的答案</div>
+    </div>
+    <a class="btn-star" href="https://github.com/yzg1226/mcd-party-officer" target="_blank" rel="noopener">⭐ GitHub 上给我加颗星</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <b>关于数据：</b>本页是 <b>2026-10-09 用真实 MCP Token 跑通的快照</b>（杭州 · 麦当劳奇妙生日派对），
+    页面上的每一个数字都由仓库里 <code>scripts/party_plus.py</code> 的真实函数计算得出，未做美化。
+    <b>不是实时查询</b>——实时数据请按 README 接入你自己的 Token。
+  </div>
+
+  <div class="card">
+    <h2><span class="n">0</span>你说一句话</h2>
+    <div class="desc">切换人数，看同一场次下的决策如何变化（4 人未达成团线 / 6 人刚好越过 / 9 人宽裕）</div>
+    <div class="qbox">
+      <div class="who">用户</div>
+      帮我给 6 岁的女儿办一场麦当劳生日会，杭州，<b id="hcText">6</b> 个人，预算每人 60，想晚上办
+    </div>
+    <div class="seg" id="seg"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">1</span>成团概率雷达</h2>
+    <div class="desc">把「未成团自动退款」的风险变成一个可读的百分比，并告诉你还差几人</div>
+    <div class="prob">
+      <div class="ring" id="ring"></div>
+      <div>
+        <div class="probnum"><span id="pnum">90</span><small>%</small></div>
+        <div class="probmeta" id="pmeta"></div>
+        <div class="lvl" id="plvl"></div>
+      </div>
+    </div>
+    <div class="chips" id="preasons"></div>
+    <div class="pitch" id="ppitch"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span>包场 vs 拼团</h2>
+    <div class="desc">同场次、同人数下的成本与「确定性」对比——差别往往不在价格，而在能不能真的办成</div>
+    <div class="two">
+      <div class="mode" id="mBook"></div>
+      <div class="mode" id="mGroup"></div>
+    </div>
+    <div class="verdict" id="mVerdict"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span>儿童营养安心指数</h2>
+    <div class="desc">对派对餐单做热量 / 脂肪 / 钠多约束评分，并自动给出替换建议（2026-10-09 实测）</div>
+    <table>
+      <tr><th>组合</th><th>热量</th><th>脂肪</th><th>钠</th><th>安心指数</th></tr>
+      <tr><td>吉士汉堡包 + 中薯条 + 可乐中杯</td><td><b>730 kcal</b></td><td><b>24 g</b></td><td><b>838 mg</b></td><td><b>79 分 · B</b>（尚可，建议微调）</td></tr>
+    </table>
+    <div class="pitch">把「中薯条」换成「小薯条」→ 钠 <b>-45 mg</b>、热量 <b>-79 kcal</b></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span>择日与预订倒计时</h2>
+    <div class="desc">官方营销活动日历 × 场次余位 × 提前量，告诉你哪天办最值、还剩几天必须下单</div>
+    <table>
+      <tr><th>最佳日期</th><th>推荐理由</th><th>预订截止</th></tr>
+      <tr><td><b>2026-10-14</b>（周三）</td><td>当天有官方活动；筹备期 5 天，正是拉人黄金窗口</td><td><b>2026-10-11</b>（仅剩 2 天）</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">5</span>拼团招募卡</h2>
+    <div class="desc">带余位进度条与成团概率的群消息文本，复制即可发群——派对是唯一自带「发出去」动作的品类</div>
+    <pre class="cardtxt" id="cardTxt"></pre>
+    <button class="copy" id="btnCopy">📋 复制这段招募卡</button>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">6</span>派对邀请函</h2>
+    <div class="desc">麦当劳红黄配色的单文件 HTML，可保存、可直接分享（下方为真实渲染结果）</div>
+    <iframe class="inviteFrame" id="inviteFrame" title="派对邀请函"></iframe>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">7</span>筹备时间线</h2>
+    <div class="desc">T-7 → T 日待办清单，把「拉人」这件事拆成可执行的日程</div>
+    <ul class="tl" id="timeline"></ul>
+  </div>
+
+  <div class="src">
+    <b>技术说明：</b>本页为静态页面，不含任何 Token、不发起任何网络请求。
+    全部数值在构建时由 <code>party_plus.formation_radar / compare_modes / render_recruit_card / render_invite_html / party_timeline</code>
+    离线计算后固化，与仓库代码同源、可复现。
+  </div>
+
+  <footer>
+    麦当劳程序员创意开发大赛参赛作品 · 由参赛者独立开发，非麦当劳官方产品<br>
+    <a href="https://github.com/yzg1226/mcd-party-officer" target="_blank" rel="noopener">github.com/yzg1226/mcd-party-officer</a>
+  </footer>
+</div>
+
+<script>
+var DATA = {"4": {"radar": {"prob": 57, "level": "一般，建议补人", "gap": 1, "target": 5, "days_ahead": 5, "left": 12, "reasons": ["还差 1 人才到 5 人成团线", "余位充足（剩 12）", "筹备期 5 天，正是拉人黄金窗口", "晚市场次热度高"], "pitch": "2026-10-14 周三 的麦当劳派对已有 4 人，还差 1 人就成团，人均 ¥50，来吗？"}, "modes": {"headcount": 4, "per": 50.0, "book": {"mode": "包场", "type": 1, "count": 5, "total": 250.0, "certainty": "100%（确定举办）"}, "group": {"mode": "拼团", "type": 2, "count": 4, "total": null, "certainty": "取决于成团（未成团自动退款）"}, "recommend": "包场", "reasons": ["拼团需超过 5 人才能发起，当前 4 人不满足 → 只能走包场"], "max": 12}, "card": "🎉 麦当劳派对拼团招募 🎉\n———————————————\n📍 门店：杭州大厦501城市广场餐厅\n🕒 时间：2026-10-14 周三 18:30–20:00\n💰 人均：¥50（5 人成团，上限 12 人）\n🎈 内容：开心乐园餐 + 派对礼品 + 90 分钟主题游戏\n———————————————\n报名进度 [██████████░░] 4/5\n成团概率 57%（一般，建议补人）\n还差 1 人成团！\n———————————————\n👉 （点这里报名）\n（余 12 位，满 5 人成团即锁定）", "timeline": {"date": "2026-10-14", "weekday": "周三", "days_ahead": 5, "deadline": "2026-10-11", "deadline_days": 2, "alert": "仅剩 2 天就到预订截止日，请尽快锁定", "plan": [{"when": "2026-10-07", "tag": "T-7", "todo": "确定到场人数与预算，初选门店/时段", "days_ahead": -2, "status": "已过期"}, {"when": "2026-10-09", "tag": "T-5", "todo": "发起拼团招募（如走拼团），把候选人拉进群", "days_ahead": 0, "status": "今天"}, {"when": "2026-10-11", "tag": "T-3", "todo": "⚠️ 预订截止日：必须完成下单锁定场次", "days_ahead": 2, "status": "还剩 2 天"}, {"when": "2026-10-13", "tag": "T-1", "todo": "最终确认人数；如需餐食可提前点餐/预约", "days_ahead": 4, "status": "还剩 4 天"}, {"when": "2026-10-14", "tag": "T", "todo": "提前 15 分钟到店，核对派对礼品与座位", "days_ahead": 5, "status": "还剩 5 天"}], "checklist": ["确认到场人数（成团线以上）", "选定门店与场次并下单", "告知家长时间/地点/接送", "如有过敏史提前告知门店", "准备蛋糕/伴手礼（如需）"]}}, "6": {"radar": {"prob": 90, "level": "高，可放心订", "gap": 0, "target": 5, "days_ahead": 5, "left": 12, "reasons": ["已达 5 人成团线", "余位充足（剩 12）", "筹备期 5 天，正是拉人黄金窗口", "晚市场次热度高"], "pitch": "2026-10-14 周三 的麦当劳派对 6 人已达成团线，人均 ¥50，可直接锁定 🎉"}, "modes": {"headcount": 6, "per": 50.0, "book": {"mode": "包场", "type": 1, "count": 6, "total": 300.0, "certainty": "100%（确定举办）"}, "group": {"mode": "拼团", "type": 2, "count": 6, "total": 300.0, "certainty": "取决于成团（未成团自动退款）"}, "recommend": "包场", "reasons": ["两种模式均可发起", "两种模式总价相同，差别在「确定性」而非价格 → 同价优先选包场", "拼团未成团会自动取消并退款，需承担凑不齐的风险"], "max": 12}, "card": "🎉 麦当劳派对拼团招募 🎉\n———————————————\n📍 门店：杭州大厦501城市广场餐厅\n🕒 时间：2026-10-14 周三 18:30–20:00\n💰 人均：¥50（5 人成团，上限 12 人）\n🎈 内容：开心乐园餐 + 派对礼品 + 90 分钟主题游戏\n———————————————\n报名进度 [████████████] 6/5\n成团概率 90%（高，可放心订）\n已成团，可锁定 ✅\n———————————————\n👉 （点这里报名）\n（余 12 位，满 5 人成团即锁定）", "timeline": {"date": "2026-10-14", "weekday": "周三", "days_ahead": 5, "deadline": "2026-10-11", "deadline_days": 2, "alert": "仅剩 2 天就到预订截止日，请尽快锁定", "plan": [{"when": "2026-10-07", "tag": "T-7", "todo": "确定到场人数与预算，初选门店/时段", "days_ahead": -2, "status": "已过期"}, {"when": "2026-10-09", "tag": "T-5", "todo": "发起拼团招募（如走拼团），把候选人拉进群", "days_ahead": 0, "status": "今天"}, {"when": "2026-10-11", "tag": "T-3", "todo": "⚠️ 预订截止日：必须完成下单锁定场次", "days_ahead": 2, "status": "还剩 2 天"}, {"when": "2026-10-13", "tag": "T-1", "todo": "最终确认人数；如需餐食可提前点餐/预约", "days_ahead": 4, "status": "还剩 4 天"}, {"when": "2026-10-14", "tag": "T", "todo": "提前 15 分钟到店，核对派对礼品与座位", "days_ahead": 5, "status": "还剩 5 天"}], "checklist": ["确认到场人数（成团线以上）", "选定门店与场次并下单", "告知家长时间/地点/接送", "如有过敏史提前告知门店", "准备蛋糕/伴手礼（如需）"]}}, "9": {"radar": {"prob": 90, "level": "高，可放心订", "gap": 0, "target": 5, "days_ahead": 5, "left": 12, "reasons": ["已达 5 人成团线", "余位充足（剩 12）", "筹备期 5 天，正是拉人黄金窗口", "晚市场次热度高"], "pitch": "2026-10-14 周三 的麦当劳派对 9 人已达成团线，人均 ¥50，可直接锁定 🎉"}, "modes": {"headcount": 9, "per": 50.0, "book": {"mode": "包场", "type": 1, "count": 9, "total": 450.0, "certainty": "100%（确定举办）"}, "group": {"mode": "拼团", "type": 2, "count": 9, "total": 450.0, "certainty": "取决于成团（未成团自动退款）"}, "recommend": "包场", "reasons": ["两种模式均可发起", "两种模式总价相同，差别在「确定性」而非价格 → 同价优先选包场", "拼团未成团会自动取消并退款，需承担凑不齐的风险"], "max": 12}, "card": "🎉 麦当劳派对拼团招募 🎉\n———————————————\n📍 门店：杭州大厦501城市广场餐厅\n🕒 时间：2026-10-14 周三 18:30–20:00\n💰 人均：¥50（5 人成团，上限 12 人）\n🎈 内容：开心乐园餐 + 派对礼品 + 90 分钟主题游戏\n———————————————\n报名进度 [████████████] 9/5\n成团概率 90%（高，可放心订）\n已成团，可锁定 ✅\n———————————————\n👉 （点这里报名）\n（余 12 位，满 5 人成团即锁定）", "timeline": {"date": "2026-10-14", "weekday": "周三", "days_ahead": 5, "deadline": "2026-10-11", "deadline_days": 2, "alert": "仅剩 2 天就到预订截止日，请尽快锁定", "plan": [{"when": "2026-10-07", "tag": "T-7", "todo": "确定到场人数与预算，初选门店/时段", "days_ahead": -2, "status": "已过期"}, {"when": "2026-10-09", "tag": "T-5", "todo": "发起拼团招募（如走拼团），把候选人拉进群", "days_ahead": 0, "status": "今天"}, {"when": "2026-10-11", "tag": "T-3", "todo": "⚠️ 预订截止日：必须完成下单锁定场次", "days_ahead": 2, "status": "还剩 2 天"}, {"when": "2026-10-13", "tag": "T-1", "todo": "最终确认人数；如需餐食可提前点餐/预约", "days_ahead": 4, "status": "还剩 4 天"}, {"when": "2026-10-14", "tag": "T", "todo": "提前 15 分钟到店，核对派对礼品与座位", "days_ahead": 5, "status": "还剩 5 天"}], "checklist": ["确认到场人数（成团线以上）", "选定门店与场次并下单", "告知家长时间/地点/接送", "如有过敏史提前告知门店", "准备蛋糕/伴手礼（如需）"]}}};
+var INVITE = "<!DOCTYPE html>\n<html lang=\"zh-CN\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>麦当劳奇妙生日派对 · 派对邀请函</title>\n<style>\n *{box-sizing:border-box;margin:0;padding:0}\n body{font-family:-apple-system,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;\n      background:#faf7f2;color:#2b2b2b;display:flex;justify-content:center;padding:32px 16px}\n .card{width:100%;max-width:520px;background:#fff;border-radius:24px;overflow:hidden;\n       box-shadow:0 18px 48px rgba(180,30,20,.12)}\n .top{background:linear-gradient(135deg,#DA291C,#F24E1E);color:#fff;padding:28px 28px 22px}\n .brand{font-size:13px;letter-spacing:3px;opacity:.9}\n h1{font-size:30px;margin:8px 0 6px;letter-spacing:1px}\n .sub{font-size:14px;opacity:.92}\n .body{padding:22px 28px}\n .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed #eee;font-size:15px}\n .row span:first-child{color:#8a8a8a}\n .row span:last-child{font-weight:700}\n .badge{display:inline-block;background:#FFF3D1;color:#8a6100;border-radius:999px;\n        padding:4px 12px;font-size:13px;font-weight:700;margin:6px 6px 0 0}\n .bar{height:12px;background:#f0eee9;border-radius:999px;overflow:hidden;margin:14px 0 8px}\n .bar>i{display:block;height:100%;background:linear-gradient(90deg,#FFC72C,#DA291C);border-radius:999px}\n .foot{padding:18px 28px 26px;font-size:13px;color:#8a8a8a;line-height:1.7}\n .cta{display:block;text-align:center;background:#FFC72C;color:#3a2a00;font-weight:800;\n      padding:14px;border-radius:14px;margin-top:16px;font-size:16px}\n</style></head><body>\n<div class=\"card\">\n <div class=\"top\">\n   <div class=\"brand\">McDONALD'S PARTY</div>\n   <h1>麦当劳奇妙生日派对</h1>\n   <div class=\"sub\">杭州市 · 2026-10-14 周三</div>\n </div>\n <div class=\"body\">\n   <div class=\"row\"><span>门店</span><span>杭州大厦501城市广场餐厅</span></div>\n   <div class=\"row\"><span>时段</span><span>18:30 – 20:00</span></div>\n   <div class=\"row\"><span>人均</span><span>¥50</span></div>\n   <div class=\"row\"><span>成团</span><span>5 人起（上限 12 人）</span></div>\n   <div class=\"row\"><span>已报名</span><span>6 人</span></div>\n   <div class=\"bar\"><i style=\"width:100%\"></i></div>\n   <div>\n     <span class=\"badge\">成团概率 90%</span>\n     <span class=\"badge\">时长 90 分钟</span>\n     <span class=\"badge\">开心乐园餐</span>\n   </div>\n </div>\n <div class=\"foot\">\n   名额有限，先到先得；如需调整请在活动日前 3 天申请退订。\n   <div class=\"cta\">长按识别 / 点击报名参加</div>\n </div>\n</div></body></html>";
+var order = ["4","6","9"];
+var cur = "6";
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function ringSvg(p){
+  var r=44, c=2*Math.PI*r, off=c*(1-p/100);
+  var color = p>=80 ? "#DA291C" : (p>=60 ? "#F24E1E" : "#c9a227");
+  return '<svg width="104" height="104" viewBox="0 0 104 104">'
+    +'<circle cx="52" cy="52" r="'+r+'" fill="none" stroke="#f0eee9" stroke-width="12"/>'
+    +'<circle cx="52" cy="52" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round"'
+    +' stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg>';
+}
+
+function render(hc){
+  var s = DATA[hc]; if(!s) return;
+  cur = hc;
+  document.getElementById("hcText").textContent = hc;
+
+  // 分段按钮
+  var seg = document.getElementById("seg"); seg.innerHTML="";
+  order.forEach(function(k){
+    var b=document.createElement("button");
+    b.textContent = k+" 人";
+    if(k===hc) b.className="on";
+    b.onclick=function(){render(k);};
+    seg.appendChild(b);
+  });
+
+  var r=s.radar;
+  document.getElementById("ring").innerHTML = ringSvg(r.prob);
+  document.getElementById("pnum").textContent = r.prob;
+  document.getElementById("pmeta").innerHTML =
+    "还差 <b>"+r.gap+"</b> 人到 "+r.target+" 人成团线 ｜ 距活动 <b>"+r.days_ahead+"</b> 天 ｜ 余位 <b>"+r.left+"</b>";
+  document.getElementById("plvl").textContent = r.level;
+  document.getElementById("preasons").innerHTML = r.reasons.map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join("");
+  document.getElementById("ppitch").textContent = "💬 拉人话术：" + r.pitch;
+
+  var m=s.modes, bk=m.book, gp=m.group;
+  document.getElementById("mBook").className = "mode" + (m.recommend==="包场"?" best":"");
+  document.getElementById("mBook").innerHTML =
+    '<div class="t">包场'+(m.recommend==="包场"?'<span class="tag">推荐</span>':'')+'</div>'
+    +'<div class="price">¥'+bk.total.toFixed(0)+'</div>'
+    +'<div class="cert">'+bk.count+' 人 ｜ '+bk.certainty+'</div>';
+  document.getElementById("mGroup").className = "mode" + (m.recommend==="拼团"?" best":"");
+  document.getElementById("mGroup").innerHTML =
+    '<div class="t">拼团'+(m.recommend==="拼团"?'<span class="tag">推荐</span>':'')+'</div>'
+    +'<div class="price">'+(gp.total==null?'不可发起':'¥'+gp.total.toFixed(0))+'</div>'
+    +'<div class="cert">'+gp.count+' 人 ｜ '+gp.certainty+'</div>';
+  document.getElementById("mVerdict").innerHTML =
+    "结论：推荐 <b>"+m.recommend+"</b><br>" + m.reasons.map(function(x){return "· "+esc(x);}).join("<br>");
+
+  document.getElementById("cardTxt").textContent = s.card;
+
+  var tl = s.timeline || {};
+  var items = tl.items || tl.list || tl.steps || [];
+  var ul = document.getElementById("timeline");
+  if(!items.length){
+    ul.innerHTML = '<li><b>T-'+r.days_ahead+'（今天）</b>　确认场次与人数，发出招募卡</li>'
+      +'<li><b>T-3</b>　预订截止：补齐人数并下单（需提前 3 天预订）</li>'
+      +'<li><b>T-1</b>　群里再确认一次到场名单</li>'
+      +'<li><b>T 日</b>　提前 15 分钟到店</li>';
+  }else{
+    ul.innerHTML = items.map(function(it){
+      var t = it.day || it.date || it.label || "";
+      var c = it.todo || it.text || it.item || "";
+      return '<li><b>'+esc(t)+'</b>　'+esc(c)+'</li>';
+    }).join("");
+  }
+}
+
+document.getElementById("inviteFrame").srcdoc = INVITE;
+document.getElementById("btnCopy").onclick = function(){
+  var t = document.getElementById("cardTxt").textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){
+      var b=document.getElementById("btnCopy"); var o=b.textContent;
+      b.textContent="✅ 已复制"; setTimeout(function(){b.textContent=o;},1600);
+    });
+  }
+};
+render("6");
+</script>
+</body>
+</html>
