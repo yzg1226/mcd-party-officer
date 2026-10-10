@@ -7,6 +7,7 @@
 
 </div>
 
+[![Live Demo](https://img.shields.io/badge/live--demo-online-blueviolet.svg)](https://yzg1226.github.io/mcd-party-officer/)
 [![MCP](https://img.shields.io/badge/MCD_MCP-live-DA291C.svg)](MCP_INTEGRATION.md)
 [![Skill](https://img.shields.io/badge/WorkBuddy-Skill-FFC72C.svg)](SKILL.md)
 [![Live Tested](https://img.shields.io/badge/live_tested-2026--10--09-brightgreen.svg)](#四使用示例)
@@ -25,6 +26,14 @@
 ![真实运行输出](docs/preview-1-output.png)
 
 > 上图为 2026-10-09 用真实 Token 跑通的原始输出，未做美化、未替换数据。
+
+---
+
+## 🎬 先看效果：在线演示（免安装、免 Token）
+
+> **[🍟 打开在线演示页](https://yzg1226.github.io/mcd-party-officer/)** —— 浏览器直接点：
+> 切换人数（4 / 6 / 9 人），看成团概率雷达、包场 vs 拼团对比、招募卡与邀请函的完整输出。
+> 页面为 2026-10-09 真实 Token 跑通的快照（由本仓库 `scripts/party_plus.py` 真实函数计算固化），**不是实时查询**，已明确标注。
 
 ---
 
@@ -294,6 +303,7 @@ mcd-party-officer/
 | WorkBuddy 开发对话上下文 | [`workbuddy.md`](workbuddy.md) |
 | 技能主文件（Agent 运行时加载） | [`SKILL.md`](SKILL.md) |
 | 邀请函产物示例（可直接分享的单文件 HTML） | [`examples/sample_invite.html`](examples/sample_invite.html) |
+| 在线演示页（GitHub Pages，免安装免 Token） | [`docs/index.html`](docs/index.html) → [yzg1226.github.io/mcd-party-officer](https://yzg1226.github.io/mcd-party-officer/) |
 
 ---
 
