@@ -1,6 +1,19 @@
-# 派对拼团官 · mcd-party-officer
+<div align="center">
 
-> 麦当劳门店派对最怕的不是贵，是**凑不齐人**——官方规则写明：拼团未在截止前凑够人数会**自动取消并退款**。
+# 🍟 派对拼团官 · McParty Officer
+
+**麦当劳门店派对最怕的不是贵，是凑不齐人。**
+**一句话问出去，回来一张「这场到底办得成吗」的确定性答案。**
+
+</div>
+
+[![MCP](https://img.shields.io/badge/MCD_MCP-live-DA291C.svg)](MCP_INTEGRATION.md)
+[![Skill](https://img.shields.io/badge/WorkBuddy-Skill-FFC72C.svg)](SKILL.md)
+[![Live Tested](https://img.shields.io/badge/live_tested-2026--10--09-brightgreen.svg)](#四使用示例)
+[![Python](https://img.shields.io/badge/python-3.7%2B%20zero_dep-blue.svg)](#三快速开始)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+> 官方规则写明：拼团未在截止前凑够人数会**自动取消并退款**。
 > 本项目把派对从「怎么策划」推进到「**到底办不办得成**」：算成团概率、比包场与拼团、挑最值的日子、一键生成招募卡把人群拉满，并给出预订截止倒计时。
 
 **别人帮你策划一场派对；我们帮你把人凑齐、把场锁定、把日子挑对、把人喊来。**
@@ -10,6 +23,57 @@
 | 3.7+ 即可运行 | `mcp.mcd.cn` | 真实场次 / 余位 / 满减 | 无 pip install |
 
 ![真实运行输出](docs/preview-1-output.png)
+
+> 上图为 2026-10-09 用真实 Token 跑通的原始输出，未做美化、未替换数据。
+
+---
+
+## 🚀 三步开吃
+
+### 第 1 步 · 把这段话整段发给 WorkBuddy（不用碰命令行）
+
+```text
+帮我安装这个技能：https://github.com/yzg1226/mcd-party-officer
+把仓库内容放到用户级技能目录 ~/.workbuddy/skills/mcd-party-officer/
+（SKILL.md 与 scripts/ 需同级保留），确认 SKILL.md 存在，装完提醒我重开一轮会话
+```
+
+> **熟手可用命令行**（效果一样，重复执行即更新）：
+>
+> ```bash
+> git clone https://github.com/yzg1226/mcd-party-officer.git ~/.workbuddy/skills/mcd-party-officer
+> ```
+>
+> 卸载：`rm -rf ~/.workbuddy/skills/mcd-party-officer`
+
+### 第 2 步 · 对它说一句话
+
+> **「帮我给 6 岁的女儿办一场麦当劳生日会，杭州，6 个人，晚上办」**
+
+它会自己确认城市、扫场次、算成团概率，最后把决策摆在你面前。
+
+### 第 3 步 · 贴一次 Token，以后一直免配置
+
+第一次使用时按提示到 <https://open.mcd.cn/mcp> 登录 → 控制台 → 激活 → 复制 Token，粘进对话即可。
+Token 只写进你本机的环境变量或 WorkBuddy 配置，**不进仓库、不进日志、不在回复里回显**。
+
+> ⚠️ Token 等同账号凭证：只贴在自己的对话里，不要发群聊、朋友圈或 GitHub。
+
+---
+
+## 📖 目录
+
+| 章节 | 你会看到 |
+|---|---|
+| [三步开吃](#-三步开吃) | 一句话装进 WorkBuddy |
+| [30 秒看懂](#30-秒看懂它和别的派对-skill-差在哪) | 它和策划类 / 地图类 Skill 的本质差别 |
+| [痛点](#一痛点派对最容易死在凑不齐人) | 为什么派对真正死在「凑不齐人」 |
+| [解决什么](#二本项目解决什么) | 四个决策、三个产出物、一个扫描视图 |
+| [快速开始](#三快速开始) | Token / 配置 / 运行 |
+| [使用示例](#四使用示例) | 对话式、代码式、真实运行输出 |
+| [能力清单](#五能力清单) | 八大能力入口 |
+| [隐私与安全](#八隐私与安全) | Token 与下单的边界 |
+| [参赛信息](#九参赛信息) | 参赛材料对照 |
 
 ---
 
@@ -218,6 +282,18 @@ mcd-party-officer/
 - 开发工具：腾讯 WorkBuddy
 - 参赛声明：[`CONTEST_DECLARATION.md`](CONTEST_DECLARATION.md)
 - 本项目为参赛作品，由参赛者独立开发，非麦当劳官方产品
+
+### 参赛材料对照
+
+| 官方要求 | 本仓库对应文件 |
+|---|---|
+| 项目介绍 / 安装 / 使用示例 / 目标用户 | 本 `README.md` |
+| 参赛声明（官方原文，未改动） | [`CONTEST_DECLARATION.md`](CONTEST_DECLARATION.md) |
+| MCP 接入说明（Server / Tool / 调用流程 / 业务价值） | [`MCP_INTEGRATION.md`](MCP_INTEGRATION.md) |
+| 脱敏 MCP 配置示例 | [`mcp-config.example.json`](mcp-config.example.json) |
+| WorkBuddy 开发对话上下文 | [`workbuddy.md`](workbuddy.md) |
+| 技能主文件（Agent 运行时加载） | [`SKILL.md`](SKILL.md) |
+| 邀请函产物示例（可直接分享的单文件 HTML） | [`examples/sample_invite.html`](examples/sample_invite.html) |
 
 ---
 
